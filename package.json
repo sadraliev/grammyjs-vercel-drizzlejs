@@ -1,0 +1,48 @@
+{
+  "name": "grammyjs-vercel-drizzlejs",
+  "version": "1.0.0",
+  "description": "a template for quickly launching an application using GrammyJS, Vercel Functions, PostgreSQL, and Drizzle ORM.",
+  "main": "bot.js",
+  "scripts": {
+    "build": "rimraf ./build && tsc && tsc-alias",
+    "start": "NODE_ENV=production node -r dotenv/config ./build/api/bot.js",
+    "start:dev": "DEBUG='grammy*' NODE_ENV=development  tsc-watch --onsuccess \"npx ts-node  -r tsconfig-paths/register -r dotenv/config ./api/bot.ts\"",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --config .prettierrc.yml '**/*.ts' --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sadraliev/grammyjs-vercel-drizzlejs.git"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "vercel"
+  ],
+  "author": "Aibek Sadraliev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sadraliev/grammyjs-vercel-drizzlejs/issues"
+  },
+  "homepage": "https://github.com/sadraliev/grammyjs-vercel-drizzlejs#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.25",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.8",
+    "tsc-watch": "^6.0.4",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "grammy": "^1.21.1"
+  }
+}
