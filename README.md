@@ -17,10 +17,6 @@ This project template provides a streamlined setup for launching Telegram bots u
 
 [dotenv](https://www.npmjs.com/package/dotenv): Safely manage environment variables for sensitive information.
 
-[ts-node](https://typestrong.org/ts-node/): Achieve live-reloading during development for a smooth workflow.
-
-[tsc-alias](https://www.npmjs.com/package/tsc-alias ) and [tsconfig-paths](https://www.npmjs.com/package/tsconfig-paths): Simplify module resolution with path aliases.
-
 [rimraf](https://www.npmjs.com/package/rimraf): Cleanly delete old builds for a fresh start.
 
 ## Getting Started
