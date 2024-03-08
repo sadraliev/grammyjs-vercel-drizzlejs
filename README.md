@@ -45,8 +45,14 @@ Contributions are welcome! If you encounter any issues or have suggestions for i
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgements
+## Acknowledgments
 
 Special thanks to the creators and maintainers of GrammyJS, Vercel, TypeScript, ESLint, Prettier, and all other dependencies used in this project. Your contributions make projects like this possible.
+
+## FAQ
+
+#### Why aren't we using path mapping?
+
+We have opted not to use path mapping in our project due to [limitations](https://vercel.com/docs/functions/runtimes/node-js#using-typescript-with-the-node.js-runtime) in Vercel serverless functions. The versions of Vercel serverless functions used for deploying our application do not support path mapping, which restricts our ability to configure paths in the project. Instead, we are exploring alternative approaches to routing and configuration to ensure the flexibility and efficiency of our application.
 
 ### Happy Bot Building!
