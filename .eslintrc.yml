@@ -5,6 +5,7 @@ extends:
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
   - prettier
+  - plugin:drizzle/recommended
 overrides: []
 parser: '@typescript-eslint/parser'
 parserOptions:
@@ -13,4 +14,5 @@ parserOptions:
 plugins:
   - '@typescript-eslint'
   - prettier
+  - 'drizzle'
 rules: {}
