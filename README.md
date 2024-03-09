@@ -19,6 +19,10 @@ This project template provides a streamlined setup for launching Telegram bots u
 
 [rimraf](https://www.npmjs.com/package/rimraf): Cleanly delete old builds for a fresh start.
 
+[Drizzle ORM](https://orm.drizzle.team/docs/overview): Drizzle ORM is a headless TypeScript ORM with a head
+
+[serverless postgres](https://vercel.com/docs/storage/vercel-postgres): Vercel Postgres is a serverless SQL database designed to integrate with Vercel Functions and your frontend framework.
+
 ## Getting Started
 
 Clone the Repository: Begin by cloning this repository to your local machine.
