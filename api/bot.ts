@@ -1,21 +1,97 @@
 import { initializeBot } from '../app/bot.config';
-import { Bot } from 'grammy';
-import { insertMessage } from '../app/repositories/drizzle';
-import { error } from 'console';
+import { Bot, Context } from 'grammy';
+import { error, log, warn } from 'console';
+import {
+  fetchCity,
+  getCurrentWeatherByCountryCode,
+  makeMessage,
+} from './send-weather-forecast';
+
+import type { ParseModeFlavor } from '@grammyjs/parse-mode';
+import { hydrateReply, parseMode } from '@grammyjs/parse-mode';
+import { catchError, from, map, of, switchMap } from 'rxjs';
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error('BOT_TOKEN is unset');
 
-const bot = new Bot(token);
-bot.command('start', (ctx) => ctx.reply('Welcome! Up and running.'));
-bot.on('message', async (ctx, next) => {
-  try {
-    const user_id = ctx.from.id;
-    const first_name = ctx.from.first_name;
-    console.log('message from', user_id, first_name);
+const bot = new Bot<ParseModeFlavor<Context>>(token);
+bot.use(hydrateReply);
 
-    await insertMessage({ user_id, first_name });
-    await next();
+bot.api.config.use(parseMode('MarkdownV2'));
+
+bot.command('start', (ctx) => ctx.reply('Welcome! Up and running.'));
+
+bot.command('w', async (_, next) => {
+  try {
+    const source$ = of('Bishkek');
+
+    source$
+      .pipe(
+        switchMap((country) =>
+          from(fetchCity(country)).pipe(
+            catchError((error) => {
+              warn(`Failed while fetching city: ${error}`);
+              throw new Error(`Something went wrong`);
+            })
+          )
+        ),
+
+        switchMap((coordinate) => {
+          if (!coordinate) {
+            throw new Error('City not found');
+          }
+          return from(getCurrentWeatherByCountryCode(coordinate)).pipe(
+            catchError((error) => {
+              warn(
+                `Failed while fetching current weather by ${coordinate.name}: ${error}`
+              );
+              throw new Error(`Something went wrong`);
+            })
+          );
+        }),
+
+        map(makeMessage),
+        switchMap((message) => {
+          const token = process.env.BOT_TOKEN;
+          const chatId = process.env.CHAT_ID;
+          const baseUrl = `https://api.telegram.org/bot${token}/sendMessage`;
+
+          return from(
+            fetch(baseUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'MarkdownV2',
+              }),
+            })
+          ).pipe(
+            switchMap((response) => response.json()),
+            catchError((error) => {
+              warn('error: ', error);
+              return of(error);
+            })
+          );
+        }),
+        catchError((error) => {
+          return of(error.message);
+        })
+      )
+      .subscribe({
+        next: async () => {
+          log('Successfully sent message to Telegram.');
+          next();
+        },
+        error: (err) => {
+          warn(`Occurred error: ${err}`);
+        },
+        complete: () => {
+          console.log('Completed');
+        },
+      });
   } catch (err) {
     error(err);
   }
