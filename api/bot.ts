@@ -83,7 +83,7 @@ bot.command('w', async (_, next) => {
       .subscribe({
         next: async () => {
           log('Successfully sent message to Telegram.');
-          next();
+          await next();
         },
         error: (err) => {
           warn(`Occurred error: ${err}`);
