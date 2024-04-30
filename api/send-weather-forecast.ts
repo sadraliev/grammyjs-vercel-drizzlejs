@@ -125,9 +125,9 @@ export async function getCurrentWeatherByCountryCode({
   log(`Received request to fetch weather data for ${name}.`);
 
   const BASE_URL = 'https://api.openweathermap.org';
-  const API_KEY = '1a1ba32f19cc0f27956ad60e8e278118';
+  const API_KEY = process.env.API_KEY;
   const params = {
-    appid: API_KEY,
+    appid: String(API_KEY),
     lang: 'ru',
     units: 'metric',
     lat: String(lat),
