@@ -8,7 +8,7 @@
   "crons": [
     {
       "path": "/api/send-weather-forecast",
-      "schedule": "*/10 * * * *"
+      "schedule": "0 2 * * *"
     }
   ]
 }
