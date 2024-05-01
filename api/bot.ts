@@ -1,6 +1,6 @@
 import { initializeBot } from '../app/bot.config';
 import { Bot, Context } from 'grammy';
-import { error, log, warn } from 'console';
+import { error, info, log, warn } from 'console';
 import {
   fetchCity,
   getCurrentWeatherByCountryCode,
@@ -20,6 +20,37 @@ bot.use(hydrateReply);
 bot.api.config.use(parseMode('MarkdownV2'));
 
 bot.command('start', (ctx) => ctx.reply('Welcome! Up and running.'));
+
+bot.on('message', async (ctx, next) => {
+  try {
+    const botUsername = ctx.me.username;
+    const hasBotMentioned = ctx.message?.text?.includes(botUsername);
+    if (!hasBotMentioned) {
+      log('Mentioned without bot username');
+      return await next();
+    }
+
+    const replyMessage = ctx.message?.reply_to_message;
+    if (!replyMessage) {
+      log('Mentioned without reply');
+      return await next();
+    }
+
+    const messageId = replyMessage.message_id;
+
+    await ctx.pinChatMessage(messageId, { disable_notification: true });
+
+    setTimeout(
+      async () => {
+        await ctx.unpinChatMessage(messageId);
+        info('Unpinned message');
+      },
+      1000 * 60 * 15
+    );
+  } catch (error) {
+    warn('Failed when to try pin message:', error);
+  }
+});
 
 bot.command('w', async (_, next) => {
   try {
